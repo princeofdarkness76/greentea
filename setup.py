@@ -47,6 +47,7 @@ setup(name='mbed-greentea',
       url='https://github.com/mbedmicro/mbed',
       packages=find_packages(),
       license=LICENSE,
+      test_suite = 'test',
       entry_points={
         "console_scripts": ["mbedgt=mbed_greentea.mbed_greentea_cli:main",],
       },
