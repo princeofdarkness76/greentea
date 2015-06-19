@@ -63,8 +63,8 @@ def main():
                     help='You can specify list of targets you want to build. Use comma to sepatate them')
 
     parser.add_option('-n', '--test-by-names',
-                      dest='test_by_names',
-                      help='Runs only test enumerated it this switch. Use comma to separate test case names.')
+                    dest='test_by_names',
+                    help='Runs only test enumerated it this switch. Use comma to separate test case names.')
 
     parser.add_option("-O", "--only-build",
                     action="store_true",
