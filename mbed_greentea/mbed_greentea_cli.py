@@ -176,7 +176,7 @@ def main():
         # Check if mbed classic target name can be translated to yotta target name
         mut_info = get_mbed_clasic_target_info(mut['platform_name'])
         if mut_info is None:
-            print "mbed-ls: mbed classic target name %s is not in target database"% (mut['platform_name'])
+            print "mbed-ls: mbed classic target name '%s' is not in target database"% (mut['platform_name'])
         else:
             print "mbedgt: scan available targets..."
             for yotta_target in mut_info['yotta_targets']:
@@ -199,6 +199,7 @@ def main():
                     print "mbedgt: calling yotta to build your sources and tests: %s" % (' '.join(cmd))
                     yotta_result = run_cli_command(cmd, shell=False, verbose=opts.verbose)
 
+                    print "mbedgt: yotta build %s"% ('successful' if yotta_result else 'failed')
                     # Build phase will be followed by test execution for each target
                     if yotta_result and not opts.only_build_tests:
                         binary_type = mut_info['properties']['binary_type']
@@ -206,11 +207,19 @@ def main():
                             binary_type=binary_type)
 
                         print "mbedgt: running tests for '%s' target" % yotta_target_name
+                        test_list = None
+                        if opts.test_by_names:
+                            test_list = opts.test_by_names.lower().split(',')
+                            print "mbedgt: test case filter: %s (specified with -n option)" % ', '.join(["'%s'"% t for t in test_list])
+
+                            for test_n in test_list:
+                                if test_n not in ctest_test_list:
+                                    print "\ttest name '%s' not found (specified with -n option)"% test_n
+
                         for test_bin, image_path in ctest_test_list.iteritems():
                             test_result = 'SKIPPED'
                             # Skip test not mentioned in -n option
                             if opts.test_by_names:
-                                test_list = opts.test_by_names.lower().split(',')
                                 if test_bin.lower() not in test_list:
                                     continue
 
