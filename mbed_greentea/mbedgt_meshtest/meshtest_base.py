@@ -23,7 +23,7 @@ class MbedGreenteaMeshRunnerInterface:
     DEFAULT_CONFIG = 'config.json'
 
     def __init__(self, options=None):
-        pass
+        self.options = options
 
     def setup(self):
         pass
