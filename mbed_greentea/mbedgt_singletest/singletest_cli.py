@@ -21,232 +21,40 @@ Author: Przemyslaw Wirkus <Przemyslaw.Wirkus@arm.com>
 
 import os
 import sys
-import optparse
-from time import time
 
 from mbed_greentea import print_version
-from mbed_test_api import run_host_test
-from mbed_test_api import run_cli_command
-from mbed_test_api import TEST_RESULTS
-from mbed_test_api import TEST_RESULT_OK
-from cmake_handlers import load_ctest_testsuite
-from cmake_handlers import list_binaries_for_targets
-from mbed_report_api import exporter_text
-from mbed_report_api import exporter_json
-from mbed_report_api import exporter_junit
-from mbed_target_info import get_mbed_clasic_target_info
-from mbed_target_info import get_mbed_supported_test
-from mbed_target_info import get_mbed_target_from_current_dir
-from mbed_greentea_log import gt_log
-from mbed_greentea_log import gt_bright
-from mbed_greentea_log import gt_log_tab
-from mbed_greentea_log import gt_log_err
-from mbed_greentea_dlm import GREENTEA_KETTLE_PATH
-from mbed_greentea_dlm import greentea_get_app_sem
-from mbed_greentea_dlm import greentea_update_kettle
-from mbed_greentea_dlm import greentea_clean_kettle
-
-from mbedgt_meshtest import main_meshtest_cli
-from mbedgt_singletest import main_singletest_cli
-
+from mbed_greentea.mbed_test_api import run_host_test
+from mbed_greentea.mbed_test_api import run_cli_command
+from mbed_greentea.mbed_test_api import TEST_RESULTS
+from mbed_greentea.mbed_test_api import TEST_RESULT_OK
+from mbed_greentea.cmake_handlers import load_ctest_testsuite
+from mbed_greentea.cmake_handlers import list_binaries_for_targets
+from mbed_greentea.mbed_report_api import exporter_text
+from mbed_greentea.mbed_report_api import exporter_json
+from mbed_greentea.mbed_report_api import exporter_junit
+from mbed_greentea.mbed_target_info import get_mbed_clasic_target_info
+from mbed_greentea.mbed_target_info import get_mbed_supported_test
+from mbed_greentea.mbed_target_info import get_mbed_target_from_current_dir
+from mbed_greentea.mbed_greentea_log import gt_log
+from mbed_greentea.mbed_greentea_log import gt_bright
+from mbed_greentea.mbed_greentea_log import gt_log_tab
+from mbed_greentea.mbed_greentea_log import gt_log_err
 
 try:
     import mbed_lstools
     import mbed_host_tests
-except ImportError as e:
+except Exception as e:
     print str(e)
 
 MBED_LMTOOLS = 'mbed_lstools' in sys.modules
 MBED_HOST_TESTS = 'mbed_host_tests' in sys.modules
 
 
-def main():
-    """ Closure for main_singletest_cli() function """
-
-    parser = optparse.OptionParser()
-
-    parser.add_option('-t', '--target',
-                    dest='list_of_targets',
-                    help='You can specify list of targets you want to build. Use comma to sepatate them')
-
-    parser.add_option('-n', '--test-by-names',
-                    dest='test_by_names',
-                    help='Runs only test enumerated it this switch. Use comma to separate test case names.')
-
-    parser.add_option("-O", "--only-build",
-                    action="store_true",
-                    dest="only_build_tests",
-                    default=False,
-                    help="Only build repository and tests, skips actual test procedures (flashing etc.)")
-
-    parser.add_option("", "--skip-build",
-                    action="store_true",
-                    dest="skip_yotta_build",
-                    default=False,
-                    help="Skip calling 'yotta build' on this module")
-
-    copy_methods_str = "Plugin support: " + ', '.join(mbed_host_tests.host_tests_plugins.get_plugin_caps('CopyMethod'))
-    parser.add_option("-c", "--copy",
-                    dest="copy_method",
-                    help="Copy (flash the target) method selector. " + copy_methods_str,
-                    metavar="COPY_METHOD")
-
-    parser.add_option('', '--config',
-                    dest='verbose_test_configuration_only',
-                    default=False,
-                    action="store_true",
-                    help='Displays connected boards and detected targets and exits.')
-
-    parser.add_option('', '--release',
-                    dest='build_to_release',
-                    default=False,
-                    action="store_true",
-                    help='If possible force build in release mode (yotta -r).')
-
-    parser.add_option('', '--debug',
-                    dest='build_to_debug',
-                    default=False,
-                    action="store_true",
-                    help='If possible force build in debug mode (yotta -d).')
-
-    parser.add_option('', '--list',
-                    dest='list_binaries',
-                    default=False,
-                    action="store_true",
-                    help='List available binaries')
-
-    parser.add_option('', '--lock',
-                    dest='lock_by_target',
-                    default=False,
-                    action="store_true",
-                    help='Use simple resource locking mechanism to run multiple application instances')
-
-    parser.add_option('', '--digest',
-                    dest='digest_source',
-                    help='Redirect input from where test suite should take console input. You can use stdin or file name to get test case console output')
-
-    parser.add_option('', '--test-cfg',
-                    dest='json_test_configuration',
-                    help='Pass to host test data with host test configuration')
-
-    parser.add_option('', '--mesh',
-                    dest='mesh_test_module',
-                    default=False,
-                    action="store_true",
-                    help='Check for mesh test description in current directory (config.json)')
-
-    parser.add_option('', '--run',
-                    dest='run_app',
-                    help='Flash, reset and dump serial from selected binary application')
-
-    parser.add_option('', '--report-junit',
-                    dest='report_junit_file_name',
-                    help='You can log test suite results in form of JUnit compliant XML report')
-
-    parser.add_option('', '--report-text',
-                    dest='report_text_file_name',
-                    help='You can log test suite results to text file')
-
-    parser.add_option('', '--report-json',
-                    dest='report_json',
-                    default=False,
-                    action="store_true",
-                    help='Outputs test results in JSON')
-
-    parser.add_option('', '--report-fails',
-                    dest='report_fails',
-                    default=False,
-                    action="store_true",
-                    help='Prints console outputs for failed tests')
-
-    parser.add_option('-V', '--verbose-test-result',
-                    dest='verbose_test_result_only',
-                    default=False,
-                    action="store_true",
-                    help='Prints test serial output')
-
-    parser.add_option('-v', '--verbose',
-                    dest='verbose',
-                    default=False,
-                    action="store_true",
-                    help='Verbose mode (prints some extra information)')
-
-    parser.add_option('', '--version',
-                    dest='version',
-                    default=False,
-                    action="store_true",
-                    help='Prints package version and exits')
-
-    parser.description = """This automated test script is used to test mbed SDK 3.0 on mbed-enabled devices with support from yotta build tool"""
-    parser.epilog = """Example: mbedgt --target frdm-k64f-gcc"""
-
-    (opts, args) = parser.parse_args()
-
-    # Check for missing modules
-    if not MBED_LMTOOLS:
-        gt_log_err("error: mbed-ls proprietary module not installed")
-        exit(-1)
-
-    if not MBED_HOST_TESTS:
-        gt_log_err("error: mbed-host-tests proprietary module not installed")
-        exit(-1)
-
-    # Select which functionality will drive CLI
-    if opts.mesh_test_module:
-        main_cli = main_meshtest_cli
-    else:
-        main_cli = main_singletest_cli
-
-    cli_ret = 0
-    start = time()
-    if opts.lock_by_target:
-        # We are using Greentea proprietary locking meachnism to lock between platforms and targets
-        gt_log("using (experimental) simple locking mechaism")
-        gt_log_tab("kettle: %s"% GREENTEA_KETTLE_PATH)
-        gt_file_sem, gt_file_sem_name, gt_instance_uuid = greentea_get_app_sem()
-        with gt_file_sem:
-            greentea_update_kettle(gt_instance_uuid)
-            try:
-                cli_ret = main_cli(opts, args, gt_instance_uuid)
-            except KeyboardInterrupt:
-                greentea_clean_kettle(gt_instance_uuid)
-                gt_log_err("ctrl+c keyboard interrupt!")
-                exit(-2)    # Keyboard interrupt
-            except:
-                greentea_clean_kettle(gt_instance_uuid)
-                gt_log_err("Unexpected error:")
-                gt_log_tab(sys.exc_info()[0])
-                raise
-            greentea_clean_kettle(gt_instance_uuid)
-    else:
-        # Standard mode of operation
-        # Other instance must provide mutually exclusive access control to platforms and targets
-        try:
-            cli_ret = main_cli(opts, args)
-        except KeyboardInterrupt:
-            gt_log_err("ctrl+c keyboard interrupt!")
-            exit(-2)    # Keyboard interrupt
-        except Exception as e:
-            gt_log_err("Unexpected error:")
-            gt_log_tab(str(e))
-            raise
-
-    if not any([opts.list_binaries, opts.version]):
-        print "Completed in %.2f sec"% (time() - start)
-    exit(cli_ret)
-
+def main_singletest_cli(opts, args, gt_instance_uuid=None):
     """! This is main CLI function with all command line parameters
     @details This function also implements CLI workflow depending on CLI parameters inputed
     @return This function doesn't return, it exits to environment with proper success code
     """
-
-    if not MBED_LMTOOLS:
-        gt_log_err("error: mbed-ls proprietary module not installed")
-        return (-1)
-
-    if not MBED_HOST_TESTS:
-        gt_log_err("error: mbed-host-tests proprietary module not installed")
-        return (-1)
 
     # List available test binaries (names, no extension)
     if opts.list_binaries:

@@ -17,7 +17,10 @@ limitations under the License.
 Author: Przemyslaw Wirkus <Przemyslaw.Wirkus@arm.com>
 """
 
-from .mbed_greentea_cli import main
+from mbed_greentea.mbed_greentea_log import gt_log
+from mbed_greentea.mbed_greentea_log import gt_bright
+from mbed_greentea.mbed_greentea_log import gt_log_tab
+from mbed_greentea.mbed_greentea_log import gt_log_err
 
 """! @package mbed-greentea
 
@@ -27,3 +30,13 @@ This test suite supports:
 * mbed-host-test    - mbed-enabled device test framework (flash, reset and make host tests)
 
 """
+
+def print_version(verbose=True):
+    """! Print current package version
+    @return String with application version
+    """
+    import pkg_resources  # part of setuptools
+    version = pkg_resources.require("mbed-greentea")[0].version
+    if verbose:
+        print version
+    return version
