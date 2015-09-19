@@ -76,7 +76,8 @@ class BLEMeshRunner(MbedGreenteaMeshRunnerInterface):
         return True
         
     def run(self):
-        pass
+        self.process_bench()
+        
 
     def read_config(self, config_name=None):
         result = None
@@ -126,7 +127,7 @@ class BLEMeshRunner(MbedGreenteaMeshRunnerInterface):
             bench_data = self.read_json_from_file(bench_path)
             if bench_data:
                 gt_log_tab("found bench config under '%s'"% bench_path)
-                result.append(d)
+                result.append(bench_path)
             else:
                 faulty_benches.append(d)
     
@@ -149,6 +150,26 @@ class BLEMeshRunner(MbedGreenteaMeshRunnerInterface):
         if not self.platform_list:
             gt_log_warn("failed to auto-detect any compatible device")
         
+    def process_bench(self):
+        for bench_path in self.benches:
+            gt_log("processing bench '%s'"% bench_path)
+            bench_data = self.read_json_from_file(bench_path)
+            if bench_data:
+                bench_nodes = bench_data['nodes']
+                if '*' in bench_data['nodes']:
+                    common = bench_data['nodes']['*']
+                    for b in bench_data['nodes']:
+                        if b != '*':
+                            bench_nodes[b].extend(common)
+                            bench_nodes[b] = list(set(bench_nodes[b]))
+                for k in sorted(bench_nodes.keys()):
+                    if k not in ['*']:
+                        gt_log_tab("node '%s' defined as one of: %s"% (k, ",".join(bench_nodes[k])))
+                
+            else:
+                gt_log_err("failed to load bench '%s'"% bench_path)
+        
+
 def main_meshtest_cli(opts, args, gt_instance_uuid=None):
     """
     * read config.json
@@ -169,5 +190,5 @@ def main_meshtest_cli(opts, args, gt_instance_uuid=None):
         
     if not mesh_runner.run():
         return(-2)
-        
+                
     return(0)
