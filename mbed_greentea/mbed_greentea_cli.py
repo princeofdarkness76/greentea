@@ -1215,6 +1215,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                 ))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 for test_bin, image_path in filtered_ctest_test_list.iteritems():
                     test = {"test_bin":test_bin, "image_path":image_path}
                     test_queue.put(test)
@@ -1263,6 +1264,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 >>>>>>> origin/testing
 =======
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
                     print "mbedgt: yotta build %s"% ('successful' if yotta_result else 'failed')
                     # Build phase will be followed by test execution for each target
                     if yotta_result and not opts.only_build_tests:
@@ -1301,15 +1304,19 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/testing
 =======
 >>>>>>> origin/testing
 =======
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
                         for test_bin, image_path in ctest_test_list.iteritems():
                             test_result = 'SKIPPED'
                             # Skip test not mentioned in -n option
                             if opts.test_by_names:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1319,6 +1326,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 >>>>>>> origin/testing
 =======
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
                                 if test_bin.lower() not in test_list:
 >>>>>>> ARMmbed/testing
                                     continue

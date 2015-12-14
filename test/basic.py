@@ -20,6 +20,7 @@ import unittest
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 class BasicTestCase(unittest.TestCase):
     """ Basic true asserts to see that testing is executed
@@ -29,6 +30,8 @@ class BasicTestCase(unittest.TestCase):
 >>>>>>> origin/testing
 =======
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
 import os
 import errno
 import logging
@@ -37,11 +40,14 @@ import logging
 class BasicTestCase(unittest.TestCase):
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/testing
 =======
 >>>>>>> origin/testing
 =======
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
 
     def setUp(self):
         pass
