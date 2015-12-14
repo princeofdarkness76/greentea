@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Hello!
 We are an open source project of [ARM mbed](www.mbed.com). Contributions via [pull request](https://github.com/armmbed/yotta/pulls), and [bug reports](https://github.com/armmbed/yotta/issues) are welcome!
 
@@ -16,6 +17,8 @@ For your pull request to be accepted, we will need you to agree to our [contribu
 >>>>>>> origin/doc_contributing
 =======
 >>>>>>> ARMmbed/doc_contributing
+=======
+>>>>>>> origin/doc_contributing
 =======
 >>>>>>> origin/doc_contributing
   * [Contributing](#contributing)
@@ -129,10 +132,13 @@ The goal of the rebase is to have a cleaner history if I have local changes or c
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/doc_contributing
 =======
 >>>>>>> origin/doc_contributing
 =======
 >>>>>>> ARMmbed/doc_contributing
+=======
+>>>>>>> origin/doc_contributing
 =======
 >>>>>>> origin/doc_contributing
