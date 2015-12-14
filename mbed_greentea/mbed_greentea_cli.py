@@ -882,6 +882,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                     continue
 >>>>>>> ARMmbed/devel_test_flow
 
+<<<<<<< HEAD
             if mut['platform_name'] in temp_unique_platforms:
                 temp_unique_platforms.remove(mut['platform_name'])
                 mut_info = muts_info[mut['platform_name']]
@@ -1068,6 +1069,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                         gt_log("skipping calling yotta (specified with --skip-build option)")
                         yotta_result, yotta_ret = True, 0   # Skip build and assume 'yotta build' was successful
 
+=======
+>>>>>>> origin/testing
                     print "mbedgt: yotta build %s"% ('successful' if yotta_result else 'failed')
                     # Build phase will be followed by test execution for each target
                     if yotta_result and not opts.only_build_tests:
@@ -1104,14 +1107,20 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                                 if test_n not in ctest_test_list:
                                     print "\ttest name '%s' not found (specified with -n option)"% test_n
 
+<<<<<<< HEAD
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
                         for test_bin, image_path in ctest_test_list.iteritems():
                             test_result = 'SKIPPED'
                             # Skip test not mentioned in -n option
                             if opts.test_by_names:
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 if test_bin not in test_list:
 =======
+=======
+>>>>>>> origin/testing
                                 if test_bin.lower() not in test_list:
 >>>>>>> ARMmbed/testing
                                     continue

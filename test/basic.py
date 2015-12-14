@@ -18,18 +18,24 @@ limitations under the License.
 
 import unittest
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 class BasicTestCase(unittest.TestCase):
     """ Basic true asserts to see that testing is executed
     """
 =======
+=======
+>>>>>>> origin/testing
 import os
 import errno
 import logging
 
 
 class BasicTestCase(unittest.TestCase):
+<<<<<<< HEAD
 >>>>>>> ARMmbed/testing
+=======
+>>>>>>> origin/testing
 
     def setUp(self):
         pass
