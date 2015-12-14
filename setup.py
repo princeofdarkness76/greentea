@@ -38,10 +38,14 @@ def read(fname):
 
 setup(name='mbed-greentea',
 <<<<<<< HEAD
+<<<<<<< HEAD
       version='0.1.14',
 =======
       version='0.1.5',
 >>>>>>> ARMmbed/devel_ble_support
+=======
+      version='0.1.5',
+>>>>>>> origin/devel_ble_support
       description=DESCRIPTION,
       long_description=read('README.md'),
       author=OWNER_NAMES,
