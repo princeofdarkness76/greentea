@@ -16,6 +16,7 @@ limitations under the License.
 """
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 """! @package mbed-greentea-test
 
@@ -26,3 +27,5 @@ Unit tests for mbed-greentea test suite
 >>>>>>> ARMmbed/testing
 =======
 >>>>>>> origin/testing
+=======
+>>>>>>> ARMmbed/testing

@@ -19,6 +19,7 @@ limitations under the License.
 import unittest
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 class BasicTestCase(unittest.TestCase):
     """ Basic true asserts to see that testing is executed
@@ -26,6 +27,8 @@ class BasicTestCase(unittest.TestCase):
 =======
 =======
 >>>>>>> origin/testing
+=======
+>>>>>>> ARMmbed/testing
 import os
 import errno
 import logging
@@ -33,9 +36,12 @@ import logging
 
 class BasicTestCase(unittest.TestCase):
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/testing
 =======
 >>>>>>> origin/testing
+=======
+>>>>>>> ARMmbed/testing
 
     def setUp(self):
         pass

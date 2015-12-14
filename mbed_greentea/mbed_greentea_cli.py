@@ -1214,6 +1214,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                     gt_bright(platform_name)
                 ))
 
+<<<<<<< HEAD
                 for test_bin, image_path in filtered_ctest_test_list.iteritems():
                     test = {"test_bin":test_bin, "image_path":image_path}
                     test_queue.put(test)
@@ -1260,6 +1261,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 
 =======
 >>>>>>> origin/testing
+=======
+>>>>>>> ARMmbed/testing
                     print "mbedgt: yotta build %s"% ('successful' if yotta_result else 'failed')
                     # Build phase will be followed by test execution for each target
                     if yotta_result and not opts.only_build_tests:
@@ -1297,19 +1300,25 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                                     print "\ttest name '%s' not found (specified with -n option)"% test_n
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/testing
 =======
 >>>>>>> origin/testing
+=======
+>>>>>>> ARMmbed/testing
                         for test_bin, image_path in ctest_test_list.iteritems():
                             test_result = 'SKIPPED'
                             # Skip test not mentioned in -n option
                             if opts.test_by_names:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 if test_bin not in test_list:
 =======
 =======
 >>>>>>> origin/testing
+=======
+>>>>>>> ARMmbed/testing
                                 if test_bin.lower() not in test_list:
 >>>>>>> ARMmbed/testing
                                     continue
