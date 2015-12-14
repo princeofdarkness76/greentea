@@ -69,6 +69,7 @@ from mbed_greentea_dlm import GREENTEA_KETTLE_PATH
 from mbed_greentea_dlm import greentea_get_app_sem
 from mbed_greentea_dlm import greentea_update_kettle
 from mbed_greentea_dlm import greentea_clean_kettle
+<<<<<<< HEAD
 from mbed_greentea_dlm import greentea_kettle_info
 from mbed_greentea_dlm import greentea_release_target_id
 from mbed_greentea_dlm import greentea_acquire_target_id_from_list
@@ -86,6 +87,12 @@ from mbedgt_singletest import main_singletest_cli
 >>>>>>> origin/devel_ble_support
 =======
 >>>>>>> origin/devel_ble_support
+=======
+
+from mbedgt_meshtest import main_meshtest_cli
+from mbedgt_singletest import main_singletest_cli
+
+>>>>>>> ARMmbed/devel_ble_support
 
 try:
     import mbed_lstools
@@ -96,6 +103,7 @@ except ImportError as e:
 MBED_LMTOOLS = 'mbed_lstools' in sys.modules
 MBED_HOST_TESTS = 'mbed_host_tests' in sys.modules
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -138,6 +146,10 @@ def main():
 
 def main():
 >>>>>>> origin/devel_ble_support
+=======
+
+def main():
+>>>>>>> ARMmbed/devel_ble_support
     """ Closure for main_singletest_cli() function """
 
 >>>>>>> ARMmbed/devel_ble_support
@@ -297,12 +309,16 @@ def main():
         exit(-1)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> origin/devel_ble_support
+=======
+>>>>>>> ARMmbed/devel_ble_support
 
     if not MBED_HOST_TESTS:
         gt_log_err("error: mbed-host-tests proprietary module not installed")
         exit(-1)
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 =======
@@ -321,6 +337,15 @@ def main():
     else:
         main_cli = main_singletest_cli
 
+=======
+
+    # Select which functionality will drive CLI
+    if opts.mesh_test_module:
+        main_cli = main_meshtest_cli
+    else:
+        main_cli = main_singletest_cli
+
+>>>>>>> ARMmbed/devel_ble_support
     cli_ret = 0
     start = time()
     if opts.lock_by_target:
@@ -386,11 +411,14 @@ def main():
             gt_log_err("Unexpected error:")
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/devel_ble_support
 =======
 >>>>>>> origin/devel_ble_support
 =======
 >>>>>>> origin/devel_ble_support
+=======
+>>>>>>> ARMmbed/devel_ble_support
             gt_log_tab(str(e))
             raise
 
