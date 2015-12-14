@@ -72,6 +72,7 @@ from mbed_greentea_dlm import greentea_clean_kettle
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from mbed_greentea_dlm import greentea_kettle_info
 from mbed_greentea_dlm import greentea_release_target_id
 from mbed_greentea_dlm import greentea_acquire_target_id_from_list
@@ -107,6 +108,12 @@ from mbed_greentea_dlm import greentea_release_target_id
 from mbed_greentea_dlm import greentea_acquire_target_id_from_list
 
 >>>>>>> ARMmbed/devel_test_flow
+=======
+from mbed_greentea_dlm import greentea_kettle_info
+from mbed_greentea_dlm import greentea_release_target_id
+from mbed_greentea_dlm import greentea_acquire_target_id_from_list
+
+>>>>>>> origin/devel_test_flow
 
 try:
     import mbed_lstools
@@ -386,6 +393,7 @@ def main():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         gt_log("using (experimental) simple locking mechanism")
         gt_log_tab("kettle: %s"% GREENTEA_KETTLE_PATH)
 =======
@@ -394,6 +402,8 @@ def main():
 >>>>>>> origin/devel_test_flow
 =======
 >>>>>>> ARMmbed/devel_test_flow
+=======
+>>>>>>> origin/devel_test_flow
         gt_file_sem, gt_file_sem_name, gt_instance_uuid = greentea_get_app_sem()
         gt_log("using (experimental) simple locking mechanism")
         gt_log_tab("kettle: %s"% GREENTEA_KETTLE_PATH)
@@ -405,6 +415,7 @@ def main():
             except KeyboardInterrupt:
                 greentea_clean_kettle(gt_instance_uuid)
                 gt_log_err("ctrl+c keyboard interrupt!")
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -437,6 +448,14 @@ def main():
                 gt_log_tab(str(e))
                 cli_ret = -3
 >>>>>>> ARMmbed/devel_test_flow
+=======
+                exit(-2)    # Keyboard interrupt
+            except Exception as e:
+                greentea_clean_kettle(gt_instance_uuid)
+                gt_log_err("Unexpected error:")
+                gt_log_tab(str(e))
+                cli_ret = -3
+>>>>>>> origin/devel_test_flow
                 raise
             greentea_clean_kettle(gt_instance_uuid)
     else:
@@ -655,6 +674,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     #print "yt_targets:", yt_targets
 
     ### Query with mbedls for available mbed-enabled devices
@@ -671,6 +691,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 >>>>>>> origin/devel_test_flow
 =======
 >>>>>>> ARMmbed/devel_test_flow
+=======
+>>>>>>> origin/devel_test_flow
     unique_platforms = [] # Unique platforms names in detected set
     muts_info = {} # Platfrom: mut_info mapping
     platform_to_tids_map = {}    # platform_name : [tid, tid, tid, ...]
@@ -681,6 +703,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
         # Detect devices connected to system
         gt_log("detected %d device%s"% (len(mbeds_list), 's' if len(mbeds_list) != 1 else ''))
         for mut in mbeds_list:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -782,6 +805,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 =======
 =======
 >>>>>>> ARMmbed/devel_test_flow
+=======
+>>>>>>> origin/devel_test_flow
             platform_text = gt_bright(mut['platform_name'])
             platform_unique_text = gt_bright(mut['platform_name_unique'])
             serial_text = gt_bright(mut['serial_port'])
@@ -814,6 +839,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
         muts_info[unique_platform] = get_mbed_clasic_target_info(unique_platform)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     # Preload info about muts and available targets
     for unique_platform in unique_platforms:
         # Check if mbed classic target name can be translated to yotta target name
@@ -822,6 +848,8 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 
 =======
 >>>>>>> ARMmbed/devel_test_flow
+=======
+>>>>>>> origin/devel_test_flow
     list_of_targets = opts.list_of_targets.split(',') if opts.list_of_targets is not None else None
 
     test_report = {}    # Test report used to export to Junit, HTML etc...
@@ -836,6 +864,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
     test_platforms_match = 0    # Count how many tests were actually ran with current settings
     target_platforms_match = 0  # Count how many platforms were actually tested with current settings
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -929,6 +958,20 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
         gt_log_tab("using only '%s'"% gt_bright(utids))
 
 >>>>>>> ARMmbed/devel_test_flow
+=======
+    user_target_ids = opts.use_target_ids.split(',') if opts.use_target_ids else []  # User specific target IDs subset to use
+
+    # Configuration print only
+    if opts.verbose_test_configuration_only:
+        return (test_exec_retcode)
+
+    muts_to_test = [] # MUTs to actually be tested
+
+    gt_log("filtering out target ids not on below list (switch --use-tids)")
+    for utids in user_target_ids:
+        gt_log_tab("using only '%s'"% gt_bright(utids))
+
+>>>>>>> origin/devel_test_flow
     # Selecting muts to be used for specific platform occurrence
     if opts.lock_by_target:
         temp_unique_platforms = set(unique_platforms)
@@ -983,6 +1026,29 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 >>>>>>> ARMmbed/devel_test_flow
 
 <<<<<<< HEAD
+            if mut['platform_name'] in temp_unique_platforms:
+                temp_unique_platforms.remove(mut['platform_name'])
+                mut_info = muts_info[mut['platform_name']]
+                if mut_info:
+                    for yotta_target in mut_info['yotta_targets']:
+                        yotta_target_name = yotta_target['yotta_target']
+                        # Add MUT to list of muts under test in this run
+                        if yotta_target_name in list_of_targets:
+                            target_platforms_match += 1
+                            muts_to_test.append(mut)
+                            gt_log_tab("using '%s' -> '%s', target_id: '%s'"%
+                                (gt_bright(mut['platform_name']),
+                                 gt_bright(mut['platform_name_unique']),
+                                 gt_bright(mut['target_id'])))
+
+    # We can continue with testing because we actually have platforms to test
+    if muts_to_test:
+        for yotta_target in mut_info['yotta_targets']:
+            yotta_target_name = yotta_target['yotta_target']
+
+            for mut in muts_to_test:
+                mut_info = muts_info[mut['platform_name']]
+
             if mut['platform_name'] in temp_unique_platforms:
                 temp_unique_platforms.remove(mut['platform_name'])
                 mut_info = muts_info[mut['platform_name']]
@@ -1302,11 +1368,14 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                         return (test_exec_retcode)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/devel_test_flow
 =======
 >>>>>>> origin/devel_test_flow
 =======
 >>>>>>> ARMmbed/devel_test_flow
+=======
+>>>>>>> origin/devel_test_flow
 
     if opts.verbose_test_configuration_only:
         print
