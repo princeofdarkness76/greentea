@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Hello!
 We are an open source project of [ARM mbed](www.mbed.com). Contributions via [pull request](https://github.com/armmbed/yotta/pulls), and [bug reports](https://github.com/armmbed/yotta/issues) are welcome!
 
@@ -12,6 +13,8 @@ For your pull request to be accepted, we will need you to agree to our [contribu
 =======
 =======
 >>>>>>> origin/doc_contributing
+=======
+>>>>>>> ARMmbed/doc_contributing
   * [Contributing](#contributing)
     * [Enhancements vs bugs](#enhancements-vs-bugs)
     * [Workflow](#workflow)
@@ -121,6 +124,9 @@ The goal of the rebase is to have a cleaner history if I have local changes or c
   * Update ``README.md`` if your changes add new functionality to the module.
   * Add unit tests to the ``/test`` directory to cover your changes or new functionality.
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/doc_contributing
 =======
 >>>>>>> origin/doc_contributing
+=======
+>>>>>>> ARMmbed/doc_contributing
