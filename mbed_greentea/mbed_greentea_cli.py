@@ -753,11 +753,23 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     test_report = {}            # Test report used to export to Junit, HTML etc...
     muts_to_test = []           # MUTs to actually be tested
     test_queue = Queue()        # contains information about test_bin and image_path for each test case
     test_result_queue = Queue() # used to store results of each thread
     execute_threads = []        # list of threads to run test cases
+=======
+        # Check if mbed classic target name can be translated to yotta target name
+        mut_info = get_mbed_clasic_target_info(mut['platform_name'])
+        if mut_info is None:
+            print "mbed-ls: mbed classic target name '%s' is not in target database"% (mut['platform_name'])
+        else:
+            print "mbedgt: scan available targets..."
+            for yotta_target in mut_info['yotta_targets']:
+                yotta_target_name = yotta_target['yotta_target']
+                yotta_target_toolchain = yotta_target['mbed_toolchain']
+>>>>>>> ARMmbed/testing
 
     ### check if argument of --parallel mode is a integer and greater or equal 1
     try:
@@ -1056,12 +1068,14 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                         gt_log("skipping calling yotta (specified with --skip-build option)")
                         yotta_result, yotta_ret = True, 0   # Skip build and assume 'yotta build' was successful
 
+                    print "mbedgt: yotta build %s"% ('successful' if yotta_result else 'failed')
                     # Build phase will be followed by test execution for each target
                     if yotta_result and not opts.only_build_tests:
                         binary_type = mut_info['properties']['binary_type']
                         ctest_test_list = load_ctest_testsuite(os.path.join('.', 'build', yotta_target_name),
                             binary_type=binary_type)
 
+<<<<<<< HEAD
                         test_list = None
                         if opts.test_by_names:
                             test_list = opts.test_by_names.split(',')
@@ -1079,11 +1093,27 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                                 list_binaries_for_targets(verbose_footer=False)
 
                         gt_log("running tests for target '%s'" % gt_bright(yotta_target_name))
+=======
+                        print "mbedgt: running tests for '%s' target" % yotta_target_name
+                        test_list = None
+                        if opts.test_by_names:
+                            test_list = opts.test_by_names.lower().split(',')
+                            print "mbedgt: test case filter: %s (specified with -n option)" % ', '.join(["'%s'"% t for t in test_list])
+
+                            for test_n in test_list:
+                                if test_n not in ctest_test_list:
+                                    print "\ttest name '%s' not found (specified with -n option)"% test_n
+
+>>>>>>> ARMmbed/testing
                         for test_bin, image_path in ctest_test_list.iteritems():
                             test_result = 'SKIPPED'
                             # Skip test not mentioned in -n option
                             if opts.test_by_names:
+<<<<<<< HEAD
                                 if test_bin not in test_list:
+=======
+                                if test_bin.lower() not in test_list:
+>>>>>>> ARMmbed/testing
                                     continue
 
                             if get_mbed_supported_test(test_bin):
