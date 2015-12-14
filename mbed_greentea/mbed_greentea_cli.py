@@ -69,6 +69,9 @@ from mbed_greentea_dlm import GREENTEA_KETTLE_PATH
 from mbed_greentea_dlm import greentea_get_app_sem
 from mbed_greentea_dlm import greentea_update_kettle
 from mbed_greentea_dlm import greentea_clean_kettle
+from mbed_greentea_dlm import greentea_kettle_info
+from mbed_greentea_dlm import greentea_release_target_id
+from mbed_greentea_dlm import greentea_acquire_target_id_from_list
 
 from mbedgt_meshtest import main_meshtest_cli
 from mbedgt_singletest import main_singletest_cli
@@ -210,6 +213,10 @@ def main():
                     action="store_true",
                     help='Use simple resource locking mechanism to run multiple application instances')
 
+    parser.add_option('', '--use-tids',
+                    dest='use_target_ids',
+                    help='Specify explicitly which target IDs can be used by Greentea (use comma separated list)')
+
     parser.add_option('', '--digest',
                     dest='digest_source',
                     help='Redirect input from where test suite should take console input. You can use stdin or file name to get test case console output')
@@ -276,7 +283,7 @@ def main():
                     action="store_true",
                     help='Prints package version and exits')
 
-    parser.description = """This automated test script is used to test mbed SDK 3.0 on mbed-enabled devices with support from yotta build tool"""
+    parser.description = """This automated test script is used to execute tests for yotta modules on mbed-enabled devices"""
     parser.epilog = """Example: mbedgt --target frdm-k64f-gcc"""
 
     (opts, args) = parser.parse_args()
@@ -315,9 +322,15 @@ def main():
     start = time()
     if opts.lock_by_target:
         # We are using Greentea proprietary locking mechanism to lock between platforms and targets
+<<<<<<< HEAD
         gt_log("using (experimental) simple locking mechanism")
         gt_log_tab("kettle: %s"% GREENTEA_KETTLE_PATH)
+=======
+>>>>>>> ARMmbed/devel_test_flow
         gt_file_sem, gt_file_sem_name, gt_instance_uuid = greentea_get_app_sem()
+        gt_log("using (experimental) simple locking mechanism")
+        gt_log_tab("kettle: %s"% GREENTEA_KETTLE_PATH)
+        gt_log_tab("greentea lock uuid '%s'"% gt_instance_uuid)
         with gt_file_sem:
             greentea_update_kettle(gt_instance_uuid)
             try:
@@ -325,11 +338,20 @@ def main():
             except KeyboardInterrupt:
                 greentea_clean_kettle(gt_instance_uuid)
                 gt_log_err("ctrl+c keyboard interrupt!")
+<<<<<<< HEAD
                 return(-2)    # Keyboard interrupt
             except:
                 greentea_clean_kettle(gt_instance_uuid)
                 gt_log_err("unexpected error:")
                 gt_log_tab(sys.exc_info()[0])
+=======
+                exit(-2)    # Keyboard interrupt
+            except Exception as e:
+                greentea_clean_kettle(gt_instance_uuid)
+                gt_log_err("Unexpected error:")
+                gt_log_tab(str(e))
+                cli_ret = -3
+>>>>>>> ARMmbed/devel_test_flow
                 raise
             greentea_clean_kettle(gt_instance_uuid)
     else:
@@ -506,11 +528,22 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
         status = TEST_RESULTS.index(single_test_result) if single_test_result in TEST_RESULTS else -1
         return (status)
 
+<<<<<<< HEAD
     ### Selecting yotta targets to process
     yt_targets = [] # List of yotta targets specified by user used to process during this run
     if opts.list_of_targets:
         yt_targets = opts.list_of_targets.split(',')
     else:
+=======
+    # mbed-enabled devices auto-detection procedures
+    mbeds = mbed_lstools.create()
+    mbeds_list = mbeds.list_mbeds_ext()
+
+    # Option -t <opts.list_of_targets> supersedes yotta target set in current directory
+    if opts.list_of_targets is None:
+        if opts.verbose:
+            gt_log("yotta target not set from command line (specified with -t option)")
+>>>>>>> ARMmbed/devel_test_flow
         # Trying to use locally set yotta target
         gt_log("checking for yotta target in current directory")
         gt_log_tab("reason: no --target switch set")
@@ -528,6 +561,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
             ))
             return (-1)
 
+<<<<<<< HEAD
     #print "yt_targets:", yt_targets
 
     ### Query with mbedls for available mbed-enabled devices
@@ -539,9 +573,18 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 
     ready_mbed_devices = [] # Devices which can be used (are fully detected)
 
+=======
+    unique_platforms = [] # Unique platforms names in detected set
+    muts_info = {} # Platfrom: mut_info mapping
+    platform_to_tids_map = {}    # platform_name : [tid, tid, tid, ...]
+
+    gt_log("detecting connected mbed-enabled devices... %s"% ("no devices detected" if not len(mbeds_list) else ""))
+>>>>>>> ARMmbed/devel_test_flow
     if mbeds_list:
+        # Detect devices connected to system
         gt_log("detected %d device%s"% (len(mbeds_list), 's' if len(mbeds_list) != 1 else ''))
         for mut in mbeds_list:
+<<<<<<< HEAD
             if not all(mut.values()):
                 gt_log_err("can't detect all properties of the device!")
             else:
@@ -613,11 +656,53 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
         accepted_target_ids = opts.use_target_ids.split(',')
         for tid in accepted_target_ids:
             gt_log_tab("accepting target id '%s'"% gt_bright(tid))
+=======
+            platform_text = gt_bright(mut['platform_name'])
+            platform_unique_text = gt_bright(mut['platform_name_unique'])
+            serial_text = gt_bright(mut['serial_port'])
+            mount_text = gt_bright(mut['mount_point'])
+            target_id_text = gt_bright(mut['target_id'])
+            if not all([mut['platform_name'], mut['serial_port'], mut['mount_point']]):
+                gt_log_err("can't detect all properties of the device!")
+            gt_log_tab("detected '%s' -> '%s', console at '%s', mounted at '%s', target id '%s'"%
+                (platform_text,
+                 platform_unique_text,
+                 serial_text,
+                 mount_text,
+                 target_id_text))
+
+            # Determine unique platform set available
+            if mut['platform_name'] not in unique_platforms:
+                unique_platforms.append(mut['platform_name'])
+
+            # Build platform_name => all platform target_ids mapping
+            if mut['platform_name'] not in platform_to_tids_map:
+                platform_to_tids_map[mut['platform_name']] = []
+            platform_to_tids_map[mut['platform_name']].append(mut['target_id'])
+    else:
+        gt_log("no devices detected")
+
+    # Preload info about muts and available targets
+    for unique_platform in unique_platforms:
+        # Check if mbed classic target name can be translated to yotta target name
+        gt_log("scan available targets for '%s' platform..."% gt_bright(unique_platform))
+        muts_info[unique_platform] = get_mbed_clasic_target_info(unique_platform)
+
+    list_of_targets = opts.list_of_targets.split(',') if opts.list_of_targets is not None else None
+
+    test_report = {}    # Test report used to export to Junit, HTML etc...
+
+    if opts.list_of_targets is None:
+        gt_log("assuming default target as '%s'"% gt_bright(current_target))
+        gt_log_tab("reason: no --target switch set")
+        list_of_targets = [current_target]
+>>>>>>> ARMmbed/devel_test_flow
 
     test_exec_retcode = 0       # Decrement this value each time test case result is not 'OK'
     test_platforms_match = 0    # Count how many tests were actually ran with current settings
     target_platforms_match = 0  # Count how many platforms were actually tested with current settings
 
+<<<<<<< HEAD
     test_report = {}            # Test report used to export to Junit, HTML etc...
     muts_to_test = []           # MUTs to actually be tested
     test_queue = Queue()        # contains information about test_bin and image_path for each test case
@@ -665,6 +750,94 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
 
             if mut:
                 target_platforms_match += 1
+=======
+    user_target_ids = opts.use_target_ids.split(',') if opts.use_target_ids else []  # User specific target IDs subset to use
+
+    # Configuration print only
+    if opts.verbose_test_configuration_only:
+        return (test_exec_retcode)
+
+    muts_to_test = [] # MUTs to actually be tested
+
+    gt_log("filtering out target ids not on below list (switch --use-tids)")
+    for utids in user_target_ids:
+        gt_log_tab("using only '%s'"% gt_bright(utids))
+
+    # Selecting muts to be used for specific platform occurrence
+    if opts.lock_by_target:
+        temp_unique_platforms = set(unique_platforms)
+        gt_log("locking required platforms (switch --lock)")
+        if user_target_ids:
+            gt_log("filtering out target ids not on below list (switch --use-tids)")
+            for utids in user_target_ids:
+                gt_log_tab("using only '%s'"% gt_bright(utids))
+        for unique_platform in temp_unique_platforms:
+            gt_log("locking required platform '%s'"% gt_bright(unique_platform))
+            possible_target_ids = platform_to_tids_map[unique_platform]
+            if possible_target_ids:
+                if user_target_ids:
+                    # Remove from possible_target_ids elements not on user_target_ids
+                    possible_target_ids = [item for item in possible_target_ids if item in user_target_ids]
+                for ptid in possible_target_ids:
+                    gt_log_tab("available target '%s'"% gt_bright(ptid))
+                locked_target_id = greentea_acquire_target_id_from_list(possible_target_ids, gt_instance_uuid)
+                if locked_target_id:
+                    gt_log_tab("locking platform '%s'"% gt_bright(locked_target_id))
+                    for mut in mbeds_list:
+                        if mut['platform_name'] == unique_platform:
+                            if mut['target_id'] == locked_target_id:
+                                mut_info = muts_info[mut['platform_name']]
+                                if mut_info:
+                                    for yotta_target in mut_info['yotta_targets']:
+                                        yotta_target_name = yotta_target['yotta_target']
+                                        # Add MUT to list of muts under test in this run
+                                        if yotta_target_name in list_of_targets:
+                                            target_platforms_match += 1
+                                            muts_to_test.append(mut)
+                                            gt_log_tab("locked '%s' -> '%s', target_id: '%s'"%
+                                                (gt_bright(mut['platform_name']),
+                                                 gt_bright(mut['platform_name_unique']),
+                                                 gt_bright(mut['target_id'])))
+                    if target_platforms_match == 0:
+                        gt_log_tab("no platforms locked"% unique_platform)
+                else:
+                    gt_log_tab("failed to lock platform")
+                    print greentea_kettle_info()
+            else:
+                gt_log_tab("no platform '%s' available to lock"% unique_platform)
+                print greentea_kettle_info()
+    else:
+        temp_unique_platforms = set(unique_platforms)
+        for mut in mbeds_list:
+            # Use only target ids specified with --use-tids switch
+            if user_target_ids:
+                if mut['target_id'] not in user_target_ids:
+                    gt_log_tab("skipped '%s'"% gt_bright(mut['target_id']))
+                    continue
+>>>>>>> ARMmbed/devel_test_flow
+
+            if mut['platform_name'] in temp_unique_platforms:
+                temp_unique_platforms.remove(mut['platform_name'])
+                mut_info = muts_info[mut['platform_name']]
+                if mut_info:
+                    for yotta_target in mut_info['yotta_targets']:
+                        yotta_target_name = yotta_target['yotta_target']
+                        # Add MUT to list of muts under test in this run
+                        if yotta_target_name in list_of_targets:
+                            target_platforms_match += 1
+                            muts_to_test.append(mut)
+                            gt_log_tab("using '%s' -> '%s', target_id: '%s'"%
+                                (gt_bright(mut['platform_name']),
+                                 gt_bright(mut['platform_name_unique']),
+                                 gt_bright(mut['target_id'])))
+
+    # We can continue with testing because we actually have platforms to test
+    if muts_to_test:
+        for yotta_target in mut_info['yotta_targets']:
+            yotta_target_name = yotta_target['yotta_target']
+
+            for mut in muts_to_test:
+                mut_info = muts_info[mut['platform_name']]
 
                 # Demo mode: --run implementation (already added --run to mbedhtrun)
                 # We want to pass file name to mbedhtrun (--run NAME  =>  -f NAME_ and run only one binary
@@ -746,6 +919,7 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                             gt_log_tab("test name '%s' not found in CTestTestFile.cmake (specified with -n option)"% gt_bright(test_name))
                             invalid_test_names = True
                         else:
+<<<<<<< HEAD
                             gt_log_tab("test filtered in '%s'"% gt_bright(test_name))
                             filtered_ctest_test_list[test_name] = ctest_test_list[test_name]
                     if invalid_test_names:
@@ -799,6 +973,95 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                 test_report.update(partial_test_report)
             else:
                 test_report[report_key].update(partial_test_report[report_key])
+=======
+                            gt_log_err("yotta build failed!")
+                    else:
+                        gt_log("skipping calling yotta (specified with --skip-build option)")
+                        yotta_result, yotta_ret = True, 0   # Skip build and assume 'yotta build' was successful
+
+                    # Build phase will be followed by test execution for each target
+                    if yotta_result and not opts.only_build_tests:
+                        binary_type = mut_info['properties']['binary_type']
+                        ctest_test_list = load_ctest_testsuite(os.path.join('.', 'build', yotta_target_name),
+                            binary_type=binary_type)
+
+                        test_list = None
+                        if opts.test_by_names:
+                            test_list = opts.test_by_names.split(',')
+                            gt_log("test case filter: %s (specified with -n option)"% ', '.join(["'%s'"% gt_bright(t) for t in test_list]))
+
+                            invalid_test_names = False
+                            for test_n in test_list:
+                                if test_n not in ctest_test_list:
+                                    gt_log_tab("test name '%s' not found in CTestTestFile.cmake (specified with -n option)"% gt_bright(test_n))
+                                    invalid_test_names = True
+                            if invalid_test_names:
+                                gt_log("invalid test case names (specified with -n option)")
+                                gt_log_tab("note: test case names are case sensitive")
+                                gt_log_tab("note: see list of available test cases below")
+                                list_binaries_for_targets(verbose_footer=False)
+
+                        gt_log("running tests for target '%s'" % gt_bright(yotta_target_name))
+                        for test_bin, image_path in ctest_test_list.iteritems():
+                            test_result = 'SKIPPED'
+                            # Skip test not mentioned in -n option
+                            if opts.test_by_names:
+                                if test_bin not in test_list:
+                                    continue
+
+                            if get_mbed_supported_test(test_bin):
+                                disk = mut['mount_point']
+                                port = mut['serial_port']
+                                micro = mut['platform_name']
+                                program_cycle_s = mut_info['properties']['program_cycle_s']
+                                copy_method = opts.copy_method if opts.copy_method else 'shell'
+                                verbose = opts.verbose_test_result_only
+
+                                test_platforms_match += 1
+                                gt_log_tab("running host test...")
+                                host_test_result = run_host_test(image_path,
+                                                                 disk,
+                                                                 port,
+                                                                 micro=micro,
+                                                                 copy_method=copy_method,
+                                                                 program_cycle_s=program_cycle_s,
+                                                                 digest_source=opts.digest_source,
+                                                                 json_test_cfg=opts.json_test_configuration,
+                                                                 verbose=verbose)
+
+                                single_test_result, single_test_output, single_testduration, single_timeout = host_test_result
+                                test_result = single_test_result
+                                if single_test_result != TEST_RESULT_OK:
+                                    test_exec_retcode += 1
+
+                                # Update report for optional reporting feature
+                                test_name = test_bin.lower()
+                                if yotta_target_name not in test_report:
+                                    test_report[yotta_target_name] = {}
+                                if test_name not in test_report[yotta_target_name]:
+                                    test_report[yotta_target_name][test_name] = {}
+
+                                test_report[yotta_target_name][test_name]['single_test_result'] = single_test_result
+                                test_report[yotta_target_name][test_name]['single_test_output'] = single_test_output
+                                test_report[yotta_target_name][test_name]['elapsed_time'] = single_testduration
+                                test_report[yotta_target_name][test_name]['platform_name'] = micro
+                                test_report[yotta_target_name][test_name]['platform_name_unique'] = mut['platform_name_unique']
+                                test_report[yotta_target_name][test_name]['copy_method'] = copy_method
+
+                                if single_test_result != 'OK' and not verbose and opts.report_fails:
+                                    # In some cases we want to print console to see why test failed
+                                    # even if we are not in verbose mode
+                                    gt_log_tab("test failed, reporting console output (specified with --report-fails option)")
+                                    print
+                                    print single_test_output
+
+                                gt_log_tab("test '%s' %s %s in %.2f sec"% (test_bin, '.' * (80 - len(test_bin)), test_result, single_testduration))
+                    # We need to stop executing if yotta build fails
+                    if not yotta_result:
+                        gt_log_err("yotta returned %d"% yotta_ret)
+                        test_exec_retcode = -1
+                        return (test_exec_retcode)
+>>>>>>> ARMmbed/devel_test_flow
 
     if opts.verbose_test_configuration_only:
         print
