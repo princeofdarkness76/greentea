@@ -27,6 +27,7 @@
 
 # Introduction
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 Hello and welcome to the mbed SDK test suite, codename *Greentea*. The test suite is a collection of tools that enable automated testing on mbed boards.
 
@@ -189,6 +190,8 @@ Please install the following:
 To check whether the mbed dependencies exist on your machine:
 
 =======
+=======
+>>>>>>> origin/alpha2-release
 Hello and welcome to the mbed SDK test suite, codename 'greentea'.
 The mbed test suite is a collection of tools that enable automated testing on mbed platforms.
 The mbed test suite imports and uses following modules:
@@ -197,7 +200,10 @@ The mbed test suite imports and uses following modules:
 * mbed-host-tests (tools/mbed-host-tests)
 
 Make sure you've installed Python and the Python modules listed above. You can check it by typing:
+<<<<<<< HEAD
 >>>>>>> ARMmbed/alpha2-release
+=======
+>>>>>>> origin/alpha2-release
 ```
 python --version
 pip freeze | grep mbed
@@ -249,7 +255,10 @@ Now you are ready to install `greentea`:
 To install the mbed test suite download the repo and run the setup.py script with the install option.
 ```
 $ cd tools/mbed-greentea
+<<<<<<< HEAD
 >>>>>>> ARMmbed/alpha2-release
+=======
+>>>>>>> origin/alpha2-release
 $ python setup.py install
 ```
 
@@ -294,6 +303,7 @@ and you'll get:
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Building the mbed-drivers for the target
 
 You need to build the ```mbed-drivers``` for the target you're testing. We'll use the **Freescale FRDM-K64F** as an example.
@@ -309,6 +319,22 @@ Note:
 The examples below demonstrate the use of the ```--digest``` option. Assume that you have written a test runner in ```bash``` shell scripting, or just collected a bunch of test results in a database and the test console output is available.
 To get the mbed test suite's predefined test results, you must scan the console output from the tests. Note: test suite results and tags are encoded between double curly braces.
 For example, a typical success code looks like this: ```{{success}}{{end}}```.
+=======
+# Digesting test output
+The test suite now has a new feature for digesting input, which is activated with the ```--digest``` command line switch. Now you can pipe your proprietary test runner’s console output to the test suite or just ```cat``` a file with the test runner’s console output. You can also just specify file name which will be digested as the test runner's console input.
+
+This option allows you to write your own automation where you execute the test runner or just feed the test suite with the test runner’s console output.  The test suite parses the console output to determine whether it indicates success for failure, then returns that status to the test environment.
+Note:
+* ```--digest=stdin``` will force ```stdin``` to be the default test suite input.
+* ```--digest=filename.txt``` will force ```filename.txt``` file content to be the default test suite input.
+
+The examples below demonstrate the use of the ```--digest``` option. Assume that you have written a test runner in ```bash``` shell scripting, or just collected a bunch of test results in a database and the test console output is available.
+To get the mbed test suite's predefined test results, you must scan the console output from the tests. Note: test suite results and tags are encoded between double curly braces.
+For example, a typical success code looks like this: ```{{success}}{{end}}```.
+
+## Example 1 - Digest the default mbed host test runner
+You can run mbed host tests with ```mbed-host-tests``` ```mbedhtrun``` to evaluate the existing test cases' test results (Test results are returned to the environment as ```mbedgt``` return codes; the success code is ```0```).
+>>>>>>> origin/alpha2-release
 
 ## Example 1 - Digest the default mbed host test runner
 You can run mbed host tests with ```mbed-host-tests``` ```mbedhtrun``` to evaluate the existing test cases' test results (Test results are returned to the environment as ```mbedgt``` return codes; the success code is ```0```).
@@ -320,17 +346,24 @@ Change directories to the mbed sources included in your release files:
 $ cd mbed-drivers
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 Note: the test suite detected strings ```{{success}}``` and ```{{end}}``` and concluded that the test result was a success.
 >>>>>>> ARMmbed/alpha2-release
+=======
+Note: the test suite detected strings ```{{success}}``` and ```{{end}}``` and concluded that the test result was a success.
+>>>>>>> origin/alpha2-release
 
 Set your target, for example:
 
 ```yotta target frdm-k64f-gcc```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Then build the ```mbed-drivers``` (you don’t need to specify what you’re building; yotta builds the code in the current directory):
 =======
+=======
+>>>>>>> origin/alpha2-release
 And scan for error codes inside the file:
 ```
 $ mbedgt --digest=./test.txt
@@ -353,24 +386,34 @@ Start by examining the current configuration using ``mbedgt`` (which itself uses
 $ mbedgt --config
 ```
 
+<<<<<<< HEAD
 You'll see:
 
 =======
 To test a platform, the mbed SDK sources are required.  These are provided in the release sources under the libraries/mbed-sdk directory. The hardware test platform is also required; currently two targets are supported: Freescale FRDM-K64F and ST Nucleo-F401RE.
 
+=======
+# Testing
+To test a platform, the mbed SDK sources are required.  These are provided in the release sources under the libraries/mbed-sdk directory. The hardware test platform is also required; currently two targets are supported: Freescale FRDM-K64F and ST Nucleo-F401RE.
+
+>>>>>>> origin/alpha2-release
 Change directories to the mbed sources:
 ```
 $ cd libraries/mbed-sdk
 ```
 
 First, examine the current configuration:
+<<<<<<< HEAD
 >>>>>>> ARMmbed/alpha2-release
+=======
+>>>>>>> origin/alpha2-release
 ```
 mbed-ls: detecting connected mbed-enabled devices...
 mbed-ls: detected K64F, console at: COM61, mounted at: E:
         got yotta target 'frdm-k64f-gcc'
         got yotta target 'frdm-k64f-armcc'
 ```
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 ```mbedgt``` proposed a few supported yotta targets:
@@ -393,6 +436,10 @@ You'll get:
 =======
 Here, ```mbedgt``` detected (using ```mbed-ls``` module) two boards connected to host system: ``` K64F```, ```NUCLEO_F401RE ```.
 
+=======
+Here, ```mbedgt``` detected (using ```mbed-ls``` module) two boards connected to host system: ``` K64F```, ```NUCLEO_F401RE ```.
+
+>>>>>>> origin/alpha2-release
 For each ```mbedgt``` proposed a few supported yotta targets:
 * ```frdm-k64f-gcc``` - Freescale K64F platform compiled with GCC cross-compiler.
 * ```frdm-k64f-armcc``` - Freescale K64F platform compiled with Keil armcc cross-compiler.
@@ -401,7 +448,10 @@ For each ```mbedgt``` proposed a few supported yotta targets:
 For simplicity, only the GCC targets are described below.  To build the targets, the test suite can be used to invoke yotta indirectly.
 
 In this example, ```--target``` is used to specify the targets which the test suite will interact with.  Option ```-O``` is used to tell the test suite to only build sources and tests, but not to run the tests.
+<<<<<<< HEAD
 >>>>>>> ARMmbed/alpha2-release
+=======
+>>>>>>> origin/alpha2-release
 
 ```
 mbed-ls: detecting connected mbed-enabled devices...
@@ -425,6 +475,7 @@ ninja: no work to do.
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Now that the tests are built, the test suite can be called again to run the tests. From the same directory, invoke ```mbedgt``` again as shown below (this is the same command, but without the -O option):
 
 ```
@@ -439,6 +490,11 @@ Now that the tests are built, the test suite can be called again to run the test
 ```
 $ mbedgt --target=frdm-k64f-gcc,st-nucleo-f401re-gcc
 >>>>>>> ARMmbed/alpha2-release
+=======
+Now that the tests are built, the test suite can be called again to run the tests.  From the same director, invoke ```mbedgt``` again as shown below:
+```
+$ mbedgt --target=frdm-k64f-gcc,st-nucleo-f401re-gcc
+>>>>>>> origin/alpha2-release
 mbed-ls: detecting connected mbed-enabled devices...
 mbed-ls: detected K64F, console at: COM61, mounted at: E:
         got yotta target 'frdm-k64f-gcc'
@@ -745,4 +801,7 @@ Proceed (y/n)? Y
   * Solution: we will add them in coming releases
 * Issue: Not all mbed platforms have targets mapped to them.
   * Solution: More mbed platforms will be added in coming releases.
+<<<<<<< HEAD
 >>>>>>> ARMmbed/alpha2-release
+=======
+>>>>>>> origin/alpha2-release
