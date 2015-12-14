@@ -73,7 +73,10 @@ from mbedgt_meshtest import main_meshtest_cli
 from mbedgt_singletest import main_singletest_cli
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/devel_ble_support
+=======
+>>>>>>> origin/devel_ble_support
 =======
 >>>>>>> origin/devel_ble_support
 
@@ -86,6 +89,7 @@ except ImportError as e:
 MBED_LMTOOLS = 'mbed_lstools' in sys.modules
 MBED_HOST_TESTS = 'mbed_host_tests' in sys.modules
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 RET_NO_DEVICES = 1001
@@ -119,6 +123,11 @@ def main():
 
 def main():
 =======
+=======
+
+def main():
+    """ Closure for main_singletest_cli() function """
+>>>>>>> origin/devel_ble_support
 
 def main():
 >>>>>>> origin/devel_ble_support
@@ -272,16 +281,23 @@ def main():
         gt_log_err("error: mbed-ls proprietary module not installed")
         exit(-1)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/devel_ble_support
 
     if not MBED_HOST_TESTS:
         gt_log_err("error: mbed-host-tests proprietary module not installed")
         exit(-1)
+<<<<<<< HEAD
 
 =======
 
     if not MBED_HOST_TESTS:
         gt_log_err("error: mbed-host-tests proprietary module not installed")
         exit(-1)
+
+>>>>>>> origin/devel_ble_support
+=======
 
 >>>>>>> origin/devel_ble_support
     # Select which functionality will drive CLI
@@ -327,7 +343,10 @@ def main():
         except Exception as e:
             gt_log_err("Unexpected error:")
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ARMmbed/devel_ble_support
+=======
+>>>>>>> origin/devel_ble_support
 =======
 >>>>>>> origin/devel_ble_support
             gt_log_tab(str(e))
