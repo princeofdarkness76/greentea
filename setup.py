@@ -37,7 +37,11 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='mbed-greentea',
+<<<<<<< HEAD
       version='0.1.14',
+=======
+      version='0.1.5',
+>>>>>>> ARMmbed/devel_ble_support
       description=DESCRIPTION,
       long_description=read('README.md'),
       author=OWNER_NAMES,

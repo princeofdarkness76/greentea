@@ -18,6 +18,7 @@ Author: Przemyslaw Wirkus <Przemyslaw.Wirkus@arm.com>
 import os
 import sys
 import optparse
+<<<<<<< HEAD
 from time import time, sleep
 from Queue import Queue
 from threading import Thread
@@ -43,16 +44,46 @@ from mbed_greentea.mbed_greentea_dlm import greentea_update_kettle
 from mbed_greentea.mbed_greentea_dlm import greentea_clean_kettle
 from mbed_greentea.mbed_yotta_api import build_with_yotta
 from mbed_greentea.mbed_yotta_target_parse import YottaConfig
+=======
+from time import time
+
+from mbed_greentea import print_version
+from mbed_test_api import run_host_test
+from mbed_test_api import run_cli_command
+from mbed_test_api import TEST_RESULTS
+from mbed_test_api import TEST_RESULT_OK
+from cmake_handlers import load_ctest_testsuite
+from cmake_handlers import list_binaries_for_targets
+from mbed_report_api import exporter_text
+from mbed_report_api import exporter_json
+from mbed_report_api import exporter_junit
+from mbed_target_info import get_mbed_clasic_target_info
+from mbed_target_info import get_mbed_supported_test
+from mbed_target_info import get_mbed_target_from_current_dir
+from mbed_greentea_log import gt_log
+from mbed_greentea_log import gt_bright
+from mbed_greentea_log import gt_log_tab
+from mbed_greentea_log import gt_log_err
+from mbed_greentea_dlm import GREENTEA_KETTLE_PATH
+from mbed_greentea_dlm import greentea_get_app_sem
+from mbed_greentea_dlm import greentea_update_kettle
+from mbed_greentea_dlm import greentea_clean_kettle
+
+from mbedgt_meshtest import main_meshtest_cli
+from mbedgt_singletest import main_singletest_cli
+
+>>>>>>> ARMmbed/devel_ble_support
 
 try:
     import mbed_lstools
     import mbed_host_tests
-except:
-    pass
+except ImportError as e:
+    print str(e)
 
 MBED_LMTOOLS = 'mbed_lstools' in sys.modules
 MBED_HOST_TESTS = 'mbed_host_tests' in sys.modules
 
+<<<<<<< HEAD
 RET_NO_DEVICES = 1001
 RET_YOTTA_BUILD_FAIL = -1
 LOCAL_HOST_TESTS_DIR = './test/host_tests'  # Used by mbedhtrun -e <dir>
@@ -80,6 +111,12 @@ def print_version(verbose=True):
 
 def main():
     """ Closure for main_cli() function """
+=======
+
+def main():
+    """ Closure for main_singletest_cli() function """
+
+>>>>>>> ARMmbed/devel_ble_support
     parser = optparse.OptionParser()
 
     parser.add_option('-t', '--target',
@@ -163,6 +200,12 @@ def main():
                     dest='json_test_configuration',
                     help='Pass to host test data with host test configuration')
 
+    parser.add_option('', '--mesh',
+                    dest='mesh_test_module',
+                    default=False,
+                    action="store_true",
+                    help='Check for mesh test description in current directory (config.json)')
+
     parser.add_option('', '--run',
                     dest='run_app',
                     help='Flash, reset and dump serial from selected binary application')
@@ -216,8 +259,22 @@ def main():
 
     (opts, args) = parser.parse_args()
 
-    cli_ret = 0
+    # Check for missing modules
+    if not MBED_LMTOOLS:
+        gt_log_err("error: mbed-ls proprietary module not installed")
+        exit(-1)
 
+    if not MBED_HOST_TESTS:
+        gt_log_err("error: mbed-host-tests proprietary module not installed")
+        exit(-1)
+
+    # Select which functionality will drive CLI
+    if opts.mesh_test_module:
+        main_cli = main_meshtest_cli
+    else:
+        main_cli = main_singletest_cli
+
+    cli_ret = 0
     start = time()
     if opts.lock_by_target:
         # We are using Greentea proprietary locking mechanism to lock between platforms and targets
@@ -245,9 +302,15 @@ def main():
             cli_ret = main_cli(opts, args)
         except KeyboardInterrupt:
             gt_log_err("ctrl+c keyboard interrupt!")
+<<<<<<< HEAD
             return(-2)    # Keyboard interrupt
         except Exception as e:
             gt_log_err("unexpected error:")
+=======
+            exit(-2)    # Keyboard interrupt
+        except Exception as e:
+            gt_log_err("Unexpected error:")
+>>>>>>> ARMmbed/devel_ble_support
             gt_log_tab(str(e))
             raise
 
@@ -333,7 +396,6 @@ def run_test_thread(test_result_queue, test_queue, opts, mut, mut_info, yotta_ta
                            'test_report': test_report})
     return
 
-def main_cli(opts, args, gt_instance_uuid=None):
     """! This is main CLI function with all command line parameters
     @details This function also implements CLI workflow depending on CLI parameters inputed
     @return This function doesn't return, it exits to environment with proper success code

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 mbed SDK
 Copyright (c) 2011-2015 ARM Limited
@@ -14,27 +13,24 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+Author: Przemyslaw Wirkus <Przemyslaw.Wirkus@arm.com>
 """
 
-import unittest
-from mbed_greentea import mbed_greentea_cli
-from mbed_greentea import print_version
+def gt_select_nodes(avail_platforms, nodes_def):
+    """! Assigns available platforms to selected nodes
+    @return Dictionary { int:node_no : platform_name }
+    """
+    result = {}
 
-class GreenteaCliFunctionality(unittest.TestCase):
+    # All nodes mentioned in nodes description
+    all_node_types = []
+    for node in nodes_def:
+        all_node_types.extend(nodes_def[node])
+    all_node_types = set(all_node_types)
 
-    def setUp(self):
-        pass
+    # Remove nodes not available
 
-    def tearDown(self):
-        pass
+    print all_node_types
 
-    def test_print_version(self):
-        version = print_version(verbose=False)
-        a, b, c = version.split('.')
-        self.assertEqual(a.isdigit(), True)
-        self.assertEqual(b.isdigit(), True)
-        self.assertEqual(c.isdigit(), True)
-
-
-if __name__ == '__main__':
-    unittest.main()
+    return result

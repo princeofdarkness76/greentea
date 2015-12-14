@@ -16,25 +16,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import json
 import unittest
-from mbed_greentea import mbed_greentea_cli
-from mbed_greentea import print_version
 
-class GreenteaCliFunctionality(unittest.TestCase):
+from mbed_greentea.mbedgt_meshtest import meshtest_nodes
 
+
+class NodeSelectorAlgorithm(unittest.TestCase):
     def setUp(self):
+    
+        self.AVAIL_PLATFORMS = {
+            'A' : 1,
+            'B' : 1,
+            'C' : 1
+        }
+        
+        self.NODES_DEF = {
+            '*' : [],
+            '0' : ['A', 'B'],
+            '1' : ['A', 'B', 'C'],
+            '2' : ['B'],
+            }
         pass
 
     def tearDown(self):
         pass
 
-    def test_print_version(self):
-        version = print_version(verbose=False)
-        a, b, c = version.split('.')
-        self.assertEqual(a.isdigit(), True)
-        self.assertEqual(b.isdigit(), True)
-        self.assertEqual(c.isdigit(), True)
-
-
+    def test_xxx(self):
+        print
+        nodes = meshtest_nodes.gt_select_nodes(self.AVAIL_PLATFORMS, self.NODES_DEF)
+        print nodes
+    
+    def test_permutation(self):
+        import itertools
+        l = [['A', 'B', 'C'], ['A', 'B'], ['B']]
+        print l
+        print list(itertools.product(*l))
+    
 if __name__ == '__main__':
     unittest.main()
