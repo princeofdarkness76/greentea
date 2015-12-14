@@ -156,6 +156,7 @@ class GtOptions:
                  report_fails=False,
                  verbose_test_result_only=False,
                  enum_host_tests=None,
+                 hooks_json=None,
                  yotta_search_for_mbed_target=False,
                  verbose=True,
                  version=False):
@@ -182,6 +183,7 @@ class GtOptions:
         self.report_fails = report_fails
         self.verbose_test_result_only = verbose_test_result_only
         self.enum_host_tests = enum_host_tests
+        self.hooks_json = hooks_json
         self.yotta_search_for_mbed_target = yotta_search_for_mbed_target
         self.verbose = verbose
         self.version = version
